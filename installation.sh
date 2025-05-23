@@ -77,8 +77,8 @@ fi
 
 echo "Mounting partitions..."
 mount "$ROOT" /mnt
-mkdir /mnt/efi
-mount "$EFI" /mnt/efi
+mkdir /mnt/boot
+mount "$EFI" /mnt/boot
 swapon "$SWAP"
 
 if $USE_HOME; then
