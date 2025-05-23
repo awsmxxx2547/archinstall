@@ -1,2 +1,2 @@
 # archinstall
-installation script for archlinux efi
+- installation script for archlinux efi
