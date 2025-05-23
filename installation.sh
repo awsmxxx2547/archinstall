@@ -9,19 +9,21 @@ else
 fi
 
 read_password() {
-  local prompt=$1
+  local prompt="$1"
   local password=""
   while true; do
-    read -s -p "$prompt" password
+    echo -n "$prompt"
+    read -s password
     echo
     if [[ -z "$password" ]]; then
       echo "Password cannot be empty. Please try again."
     else
-      echo "$password"
-      return 0
+      break
     fi
   done
+  REPLY="$password"
 }
+
 
 set -e
 
@@ -37,9 +39,11 @@ LOCALE="en_US.UTF-8"
 read -p "Enter hostname: " HOSTNAME
 read -p "Enter username: " USERNAME
 
-ROOTPASS=$(read_password "Enter root password: ")
+read_password "Enter root password: "
+ROOTPASS="$REPLY"
 echo
-USERPASS=$(read_password "Enter user password: ")
+read_password "Enter user password: "
+USERPASS="$REPLY"
 echo
 
 read -p "Create separate /home partition? [Y/n]: " CREATE_HOME
