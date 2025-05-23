@@ -30,7 +30,7 @@ set -e
 sed -i '/^#Color/s/^#//' /etc/pacman.conf
 sed -i 's/^#\?\s*ParallelDownloads\s*=.*/ParallelDownloads = 100/' /etc/pacman.conf
 grep -q '^ParallelDownloads' /etc/pacman.conf || echo 'ParallelDownloads = 100' >> /etc/pacman.conf
-echo 'ILoveCandy' >> /etc/pacman.conf
+sed -i '/#DisableSandbox/a\ILoveCandy' /etc/pacman.conf
 
 DISK="/dev/nvme0n1"
 EFI="${DISK}p1"
@@ -97,7 +97,7 @@ set -e
 sed -i '/^#Color/s/^#//' /etc/pacman.conf
 sed -i 's/^#\?\s*ParallelDownloads\s*=.*/ParallelDownloads = 100/' /etc/pacman.conf
 grep -q '^ParallelDownloads' /etc/pacman.conf || echo 'ParallelDownloads = 100' >> /etc/pacman.conf
-echo 'ILoveCandy' >> /etc/pacman.conf
+sed -i '/#DisableSandbox/a\ILoveCandy' /etc/pacman.conf
 
 ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
 hwclock --systohc
