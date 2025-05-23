@@ -104,11 +104,7 @@ hwclock --systohc
 
 echo "$HOSTNAME" > /etc/hostname
 
-cat > /etc/hosts <<EOF
-127.0.0.1   localhost
-::1         localhost
-127.0.1.1   $HOSTNAME.localdomain $HOSTNAME
-EOF
+echo -e "127.0.0.1   localhost\n::1         localhost\n127.0.1.1   $HOSTNAME.localdomain $HOSTNAME" > /etc/hosts
 
 sed -i '/^#en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 sed -i '/^#ru_RU.UTF-8 UTF-8/s/^#//' /etc/locale.gen
@@ -125,7 +121,7 @@ sed -i '/^# %wheel ALL=(ALL:ALL) ALL/s/^# //' /etc/sudoers
 
 sed -i '/^\[multilib\]/,/^Include/ s/^#//' /etc/pacman.conf
 
-pacman -Syyuu --noconfirm reflector networkmanager
+pacman -S --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
