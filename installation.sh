@@ -125,7 +125,7 @@ sed -i '/^# %wheel ALL=(ALL:ALL) ALL/s/^# //' /etc/sudoers
 
 sed -i '/^\[multilib\]/,/^Include/ s/^#//' /etc/pacman.conf
 
-systemctl enable NetworkManager.service
+systemctl enable NetworkManager
 
 pacman -S --noconfirm reflector
 reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
