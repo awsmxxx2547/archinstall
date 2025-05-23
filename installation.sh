@@ -30,7 +30,7 @@ set -e
 sed -i '/^#Color/s/^#//' /etc/pacman.conf
 sed -i 's/^#\?\s*ParallelDownloads\s*=.*/ParallelDownloads = 100/' /etc/pacman.conf
 grep -q '^ParallelDownloads' /etc/pacman.conf || echo 'ParallelDownloads = 100' >> /etc/pacman.conf
-grep -q '^ILoveCandy' /etc/pacman.conf || echo 'ILoveCandy' >> /etc/pacman.conf
+echo 'ILoveCandy' >> /etc/pacman.conf
 
 DISK="/dev/nvme0n1"
 EFI="${DISK}p1"
@@ -46,10 +46,8 @@ read -p "Enter username: " USERNAME
 
 read_password "Enter root password: "
 ROOTPASS="$REPLY"
-echo
 read_password "Enter user password: "
 USERPASS="$REPLY"
-echo
 
 read -p "Create separate /home partition? [Y/n]: " CREATE_HOME
 read -p "Enter root (/) size in GiB (e.g., 40): " ROOT_SIZE
@@ -99,12 +97,18 @@ set -e
 sed -i '/^#Color/s/^#//' /etc/pacman.conf
 sed -i 's/^#\?\s*ParallelDownloads\s*=.*/ParallelDownloads = 100/' /etc/pacman.conf
 grep -q '^ParallelDownloads' /etc/pacman.conf || echo 'ParallelDownloads = 100' >> /etc/pacman.conf
-grep -q '^ILoveCandy' /etc/pacman.conf || echo 'ILoveCandy' >> /etc/pacman.conf
+echo 'ILoveCandy' >> /etc/pacman.conf
 
 ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
 hwclock --systohc
 
 echo "$HOSTNAME" > /etc/hostname
+
+cat > /etc/hosts <<EOF
+127.0.0.1   localhost
+::1         localhost
+127.0.1.1   $HOSTNAME.localdomain $HOSTNAME
+EOF
 
 sed -i '/^#en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 sed -i '/^#ru_RU.UTF-8 UTF-8/s/^#//' /etc/locale.gen
@@ -122,9 +126,6 @@ sed -i '/^# %wheel ALL=(ALL:ALL) ALL/s/^# //' /etc/sudoers
 sed -i '/^\[multilib\]/,/^Include/ s/^#//' /etc/pacman.conf
 
 systemctl enable NetworkManager.service
-
-pacman -S --noconfirm reflector
-reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 bootctl install
 cat > /boot/loader/loader.conf <<LOADER
