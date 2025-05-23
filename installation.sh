@@ -87,7 +87,7 @@ if $USE_HOME; then
 fi
 
 echo "Installing base system..."
-pacstrap /mnt base base-devel linux linux-firmware vim iwd networkmanager sudo amd-ucode
+pacstrap /mnt base base-devel linux linux-firmware vim iwd sudo amd-ucode
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -125,9 +125,10 @@ sed -i '/^# %wheel ALL=(ALL:ALL) ALL/s/^# //' /etc/sudoers
 
 sed -i '/^\[multilib\]/,/^Include/ s/^#//' /etc/pacman.conf
 
+pacman -S --noconfirm reflector networkmanager
+
 systemctl enable NetworkManager
 
-pacman -S --noconfirm reflector
 reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 bootctl install
