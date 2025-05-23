@@ -125,7 +125,7 @@ sed -i '/^# %wheel ALL=(ALL:ALL) ALL/s/^# //' /etc/sudoers
 
 sed -i '/^\[multilib\]/,/^Include/ s/^#//' /etc/pacman.conf
 
-pacman -S --noconfirm reflector networkmanager
+pacman -Syyuu --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
