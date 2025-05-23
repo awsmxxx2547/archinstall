@@ -3,5 +3,6 @@
 
 ### usage:
 ``` bash
-curl -fsSL https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/master/installation.sh | bash
+curl -O https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/master/installation.sh
+./installation.sh
 ```
