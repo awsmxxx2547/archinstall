@@ -125,8 +125,6 @@ pacman -S --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
-reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
 bootctl install
 cat > /boot/loader/loader.conf <<LOADER
 default arch
