@@ -4,6 +4,10 @@
 ### usage:
 ``` bash
 curl -O https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/master/installation.sh
+```
+``` bash
 chmod +x ./installation.sh
+```
+``` bash
 ./installation.sh
 ```
