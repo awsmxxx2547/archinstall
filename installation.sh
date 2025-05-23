@@ -38,7 +38,9 @@ read -p "Enter hostname: " HOSTNAME
 read -p "Enter username: " USERNAME
 
 ROOTPASS=$(read_password "Enter root password: ")
+echo
 USERPASS=$(read_password "Enter user password: ")
+echo
 
 read -p "Create separate /home partition? [Y/n]: " CREATE_HOME
 read -p "Enter root (/) size in GiB (e.g., 40): " ROOT_SIZE
