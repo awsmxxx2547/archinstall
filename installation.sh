@@ -77,8 +77,8 @@ fi
 
 echo "Mounting partitions..."
 mount "$ROOT" /mnt
-mkdir /mnt/boot
-mount "$EFI" /mnt/boot
+mkdir /mnt/efi
+mount "$EFI" /mnt/efi
 swapon "$SWAP"
 
 if $USE_HOME; then
@@ -87,7 +87,7 @@ if $USE_HOME; then
 fi
 
 echo "Installing base system..."
-pacstrap /mnt base base-devel linux linux-firmware vim iwd sudo amd-ucode
+pacstrap /mnt base base-devel linux linux-firmware vim iwd sudo amd-ucode grub efibootmgr dhcpcd
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -125,21 +125,10 @@ pacman -S --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
-bootctl install
-cat > /boot/loader/loader.conf <<LOADER
-default arch
-timeout 0
-editor no
-LOADER
+mkdir /boot/EFI
+mount /dev/nvme0n1p1 /boot/EFI
 
-UUID=$(blkid -s UUID -o value $ROOT)
-
-cat > /boot/loader/entries/arch.conf <<BOOT
-title   🚀My Super OS
-linux   /vmlinuz-linux
-initrd  /amd-ucode.img
-initrd  /initramfs-linux.img
-options root=UUID=$UUID rw
-BOOT
+grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck /dev/nvme0n1
+grub-mkconfig -o /boot/grub/grub.cfg
 
 EOF
