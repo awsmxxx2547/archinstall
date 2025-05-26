@@ -125,7 +125,7 @@ pacman -S --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
-mkdir /boot/EFI
+mkdir -p /boot/EFI
 mount /dev/nvme0n1p1 /boot/EFI
 
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck /dev/nvme0n1
