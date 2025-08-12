@@ -8,6 +8,12 @@ else
     exit 1
 fi
 
+# Check UEFI mode
+if [ ! -d /sys/firmware/efi ]; then
+    echo "Error: System is not booted in UEFI mode. Cannot install systemd-boot."
+    exit 1
+fi
+
 read_password() {
   local prompt="$1"
   local password=""
@@ -32,7 +38,19 @@ sed -i 's/^#\?\s*ParallelDownloads\s*=.*/ParallelDownloads = 100/' /etc/pacman.c
 grep -q '^ParallelDownloads' /etc/pacman.conf || echo 'ParallelDownloads = 100' >> /etc/pacman.conf
 sed -i '/#DisableSandbox/a\ILoveCandy' /etc/pacman.conf
 
-DISK="/dev/nvme0n1"
+# Disk selection
+echo "Available disks:"
+lsblk -dpno NAME,SIZE | grep -E "/dev/(sd|nvme|vd)"
+echo
+read -p "Enter the disk to install Arch Linux on (e.g., /dev/nvme0n1): " DISK
+
+# Double-check before wiping
+read -p "WARNING: All data on $DISK will be erased! Type 'YES' to continue: " CONFIRM
+if [[ "$CONFIRM" != "YES" ]]; then
+    echo "Aborted."
+    exit 1
+fi
+
 EFI="${DISK}p1"
 SWAP="${DISK}p2"
 ROOT="${DISK}p3"
@@ -67,7 +85,7 @@ else
 fi
 
 echo "Formatting partitions..."
-mkfs.fat -F32 "$EFI"
+mkfs.fat -F32 -n EFI "$EFI"
 mkswap "$SWAP"
 mkfs.ext4 "$ROOT"
 
@@ -77,8 +95,8 @@ fi
 
 echo "Mounting partitions..."
 mount "$ROOT" /mnt
-mkdir /mnt/efi
-mount "$EFI" /mnt/efi
+mkdir -p /mnt/boot/efi
+mount "$EFI" /mnt/boot/efi
 swapon "$SWAP"
 
 if $USE_HOME; then
@@ -87,7 +105,7 @@ if $USE_HOME; then
 fi
 
 echo "Installing base system..."
-pacstrap /mnt base base-devel linux linux-firmware vim iwd sudo amd-ucode grub efibootmgr dhcpcd
+pacstrap /mnt base base-devel linux linux-firmware vim iwd sudo amd-ucode efibootmgr dhcpcd
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -125,10 +143,20 @@ pacman -S --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
-mkdir -p /boot/EFI
-mount /dev/nvme0n1p1 /boot/EFI
+bootctl --path=/boot/efi install
+cat > /boot/loader/loader.conf <<LOADER
+default arch
+timeout 0
+editor no
+LOADER
 
-grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck /dev/nvme0n1
-grub-mkconfig -o /boot/grub/grub.cfg
+UUID=$(blkid -s UUID -o value $ROOT)
 
+cat > /boot/loader/entries/arch.conf <<BOOT
+title   🚀My Super OS
+linux   /vmlinuz-linux
+initrd  /amd-ucode.img
+initrd  /initramfs-linux.img
+options root=UUID=$UUID rw
+BOOT
 EOF
