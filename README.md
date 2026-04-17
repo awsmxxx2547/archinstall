@@ -1,9 +1,9 @@
 # archinstall
-- installation script for archlinux efi
+- installation script for archlinux efi xfs
 
 ### usage:
 ``` bash
-curl -O https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/master/installation.sh
+curl -O https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/xfs/installation.sh
 ```
 ``` bash
 chmod +x ./installation.sh
