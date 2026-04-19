@@ -139,13 +139,15 @@ pacman -S --noconfirm reflector networkmanager
 
 systemctl enable NetworkManager
 
+echo "KEYMAP=us" > /etc/vconsole.conf
+
 echo "Configuring initramfs for LVM..."
 # Вставляем хук lvm2 между block и filesystems для корректной загрузки
 sed -i 's/\bblock filesystems\b/block lvm2 filesystems/g' /etc/mkinitcpio.conf
 mkinitcpio -P
 
 echo "Installing GRUB bootloader..."
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Installation complete!"
