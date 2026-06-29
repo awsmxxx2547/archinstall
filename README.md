@@ -3,7 +3,7 @@
 
 ### usage:
 ``` bash
-curl -O https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/master/installation.sh
+curl -O https://raw.githubusercontent.com/awsmxxx2547/archinstall/refs/heads/bios/installation.sh
 ```
 ``` bash
 chmod +x ./installation.sh
